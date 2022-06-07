@@ -29,6 +29,12 @@ export const styles = {
       page-break-before: always;
     }
   `,
+  title: css`
+    color: #ccc;
+    @media print {
+      display: none;
+    }
+  `,
   ul: (reverse = false) => css`
     ${resetList(reverse)}
   `

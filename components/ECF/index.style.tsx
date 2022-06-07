@@ -14,5 +14,5 @@ const getColorIndex = (color: COLOR): number => {
 };
 
 export const sortColor = (a: COLOR, b: COLOR): number => {
-  return getColorIndex(b) - getColorIndex(a);
+  return getColorIndex(a) - getColorIndex(b);
 }

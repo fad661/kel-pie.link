@@ -7,12 +7,14 @@ const SIZES = {
 
 type Props = {
   size?: typeof SIZES[keyof typeof SIZES];
+  title?: string;
   children?: ReactNode;
   reverse?: boolean;
 }
 
 export const PrintableList: FC<Props> = ({
   size = 'A4',
+  title,
   children,
   reverse = false,
 }) => {
@@ -26,6 +28,7 @@ export const PrintableList: FC<Props> = ({
   }, [size]);
   return (
     <section css={wrapperStyle}>
+      <h2 css={styles.title}>{title}</h2>
       <ul css={styles.ul(reverse)}>
         {children}
       </ul>

@@ -25,13 +25,13 @@ type Props = {
   slots: Slot[];
 }
 
-type Slot = {
+export type Slot = {
   difficluty: number;
   pointType: POINT;
   costs: Cost[];
 };
 
-type Cost = {
+export type Cost = {
   color: COLOR;
   amount: number;
 };
