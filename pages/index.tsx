@@ -1,5 +1,6 @@
-import type { NextPage } from 'next'
+import type { GetStaticPropsContext, NextPage } from 'next'
 import { ComponentProps, useCallback, useState } from 'react'
+import hash from 'object-hash'
 import { COLORS } from '../components/ECF/index.style'
 import { MoneyBack } from '../components/ECF/Money/Back'
 import MoneyFront from '../components/ECF/Money/Front/MoneyFront'
@@ -104,22 +105,22 @@ const Home: NextPage = () => {
       <Global styles={globalStyle} />
       <PrintableList title="紙幣: 表">
         { bills.map((card) => (
-          <MoneyFront color={card.color} amount={card.amount} />
+          <MoneyFront key={`front-${hash(card)}`} color={card.color} amount={card.amount} />
         ))}
       </PrintableList>
       <PrintableList title="紙幣: 裏" reverse>
         { bills.map((card) => (
-          <MoneyBack color={card.color} />
+          <MoneyBack key={`back-${hash(card)}`} color={card.color} />
         ))}
       </PrintableList>
       <PrintableList title="プロジェクト: 表">
         { projects.map((project) => (
-          <ProjectFront leaderPoint={project.leaderPoint} slots={project.slots} />
+          <ProjectFront key={`front-${hash(project)}`} leaderPoint={project.leaderPoint} slots={project.slots} />
         ))}
       </PrintableList>
       <PrintableList title="プロジェクト: 裏" reverse>
         { projects.map((project) => (
-          <ProjectBack turn={project.turn} />
+          <ProjectBack key={`back-${hash(project)}`} turn={project.turn} />
         ))}
       </PrintableList>
       <Controller onParseMoneyCallback={onParseMoneyCallback} onParseProjectCallback={onParseProjectCallback} />
@@ -127,4 +128,10 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export const getStaticProps = async (context: GetStaticPropsContext) => {
+  return {
+    props: {}
+  };
+}
+
+export default Home;

@@ -1,4 +1,5 @@
 import React, { FC, useMemo } from 'react';
+import hash from 'object-hash';
 import Card from '../../../Card/Card';
 import { styles } from './ProjectFront.style';
 import { COLOR, sortColor } from '../../index.style';
@@ -56,7 +57,7 @@ export const ProjectFront: FC<Props> = ({
         <section css={styles.section}>
           <ul css={styles.slots}>
             {slots.map((slot) => (
-              <li css={styles.slot} title={`${slot.pointType} ${slot.difficluty}`}>
+              <li key={hash(slot)} css={styles.slot} title={`${slot.pointType} ${slot.difficluty}`}>
                 <Costs costs={slot.costs} />
               </li>
             ))}
@@ -81,7 +82,7 @@ const Costs: FC<{ costs: Cost[]}> = ({
     <ul css={styles.cost}>
       {sortedCosts.map((cost) => {
         return [...Array(cost.amount)].map(() => (
-          <li css={styles.badge(cost.color)} />
+          <li key={hash(cost)} css={styles.badge(cost.color)} />
         ))
       })}
     </ul>
