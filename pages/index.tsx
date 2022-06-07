@@ -6,8 +6,69 @@ import MoneyFront from '../components/ECF/Money/Front/MoneyFront'
 import ProjectFront, { POINT_TYPES } from '../components/ECF/Project/Front/ProjectFront'
 import ProjectBack from '../components/ECF/Project/Back/ProjectBack'
 import { PrintableList } from '../components/PrintableList'
+import { css, Global } from '@emotion/react'
 
 const cardList = [
+  {
+    color: COLORS.RED,
+    amount: 1
+  },
+  {
+    color: COLORS.BLUE,
+    amount: 2
+  },
+  {
+    color: COLORS.GREEN,
+    amount: 3
+  },
+  {
+    color: COLORS.RED,
+    amount: 1
+  },
+  {
+    color: COLORS.BLUE,
+    amount: 2
+  },
+  {
+    color: COLORS.GREEN,
+    amount: 3
+  },
+  {
+    color: COLORS.RED,
+    amount: 1
+  },
+  {
+    color: COLORS.BLUE,
+    amount: 2
+  },
+  {
+    color: COLORS.GREEN,
+    amount: 3
+  },
+  {
+    color: COLORS.RED,
+    amount: 1
+  },
+  {
+    color: COLORS.BLUE,
+    amount: 2
+  },
+  {
+    color: COLORS.GREEN,
+    amount: 3
+  },
+  {
+    color: COLORS.RED,
+    amount: 1
+  },
+  {
+    color: COLORS.BLUE,
+    amount: 2
+  },
+  {
+    color: COLORS.GREEN,
+    amount: 3
+  },
   {
     color: COLORS.RED,
     amount: 1
@@ -105,23 +166,40 @@ const projectList = [
   }
 ];
 
+const globalStyle = css`
+  body {
+    margin: 0;
+  }
+  @page {
+    margin: 10px;
+  }
+`;
+
 const Home: NextPage = () => {
   return (
-   <PrintableList>
-    { cardList.map((card) => (
-      <MoneyFront color={card.color} amount={card.amount} />
-    ))}
-
-    { cardList.map((card) => (
-      <MoneyBack color={card.color} />
-    ))}
-    { projectList.map((project) => (
-      <ProjectFront leaderPoint={project.leaderPoint} slots={project.slots} />
-    ))}
-    { projectList.map((project) => (
-      <ProjectBack turn={project.turn} />
-    ))}
-   </PrintableList>
+    <>
+      <Global styles={globalStyle} />
+      <PrintableList>
+        { cardList.map((card) => (
+          <MoneyFront color={card.color} amount={card.amount} />
+        ))}
+      </PrintableList>
+      <PrintableList reverse>
+        { cardList.map((card) => (
+          <MoneyBack color={card.color} />
+        ))}
+      </PrintableList>
+      <PrintableList>
+        { projectList.map((project) => (
+          <ProjectFront leaderPoint={project.leaderPoint} slots={project.slots} />
+        ))}
+      </PrintableList>
+      <PrintableList reverse>
+        { projectList.map((project) => (
+          <ProjectBack turn={project.turn} />
+        ))}
+      </PrintableList>
+    </>
   )
 }
 
