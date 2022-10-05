@@ -8,8 +8,8 @@ import ProjectFront, { Cost, Slot } from '../components/ECF/Project/Front/Projec
 import ProjectBack from '../components/ECF/Project/Back/ProjectBack'
 import { PrintableList } from '../components/PrintableList'
 import { css, Global } from '@emotion/react'
-import Controller, { BillRow, ProjectRow} from '../components/Controller/Controller'
-import { CARD_TYPE, SIDE_TYPE, usePrintMode } from '../contexts/PrintMode'
+import Controller, { BillRow, ProjectRow, ManaRow} from '../components/Controller/Controller'
+import { SIDE_TYPE, usePrintMode } from '../contexts/PrintMode'
 import { ManaFront } from '../components/ECF/Mana/Front'
 
 
@@ -83,16 +83,20 @@ const sliceByNumber = (arr: any[], num: number) => {
   )
 }
 
-const maxPageNum = 36;
+// const maxPageNum = 36;
+const maxPageNum = 9; // A4 x Porker
 
 type Bill = ComponentProps<typeof MoneyFront> & ComponentProps<typeof MoneyBack>;
 type Project = ComponentProps<typeof ProjectFront> & ComponentProps<typeof ProjectBack>;
+type Mana = ComponentProps<typeof ManaFront>;
+type AbilityType = Mana['abilityType'];
 
 const Home: NextPage = () => {
   const { sideType, loadCardType} = usePrintMode();
 
   const [bills, setBills] = useState<Bill[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [manas, setManas] = useState<Mana[]>([]);
 
   const onParseMoneyCallback = useCallback((data: BillRow[]) => {
     const bills = data.map<Bill>((bill) => {
@@ -116,6 +120,18 @@ const Home: NextPage = () => {
     setProjects(projects);
   }, []);
 
+  const onParseManaCallback = useCallback((data: ManaRow[]) => {
+    const manas = data.map<Mana>((manaRow: ManaRow) => {
+      return {
+        mana: parseInt(manaRow['マナ']),
+        abilityType: manaRow['効果の属性'] as AbilityType,
+        marketAbility: manaRow['変動'],
+        additionalAbility: manaRow['効果']
+      };
+    });
+    setManas(manas);
+  }, []);
+
   const billsBlocks = useMemo(() => {
     return sliceByNumber(bills, maxPageNum);
   }, [bills]);
@@ -124,14 +140,12 @@ const Home: NextPage = () => {
     return sliceByNumber(projects, maxPageNum);
   }, [projects]);
 
+  const manasBlocks = useMemo(() => {
+    return sliceByNumber(manas, maxPageNum);
+  }, [manas]);
+
   return (
     <>
-      <PrintableList>
-        <ManaFront mana={4} abilityType='アタック' marketAbility='価値2の場所に価値が下がるチップをおく・チップは次のラウンドに取り除く' additionalAbility='マーケット内の街カードを1枚指定する。その街カードは次のラウンドまであなたしか買うことが出来ない。' />
-        <ManaFront mana={5} abilityType='購入' marketAbility='価値2の場所に価値が下がるチップをおく・チップは次のラウンドに取り除く' additionalAbility='マーケット内の街カードを1枚指定する。その街カードは次のラウンドまであなたしか買うことが出来ない。' />
-        <ManaFront mana={1} abilityType='勝利点' marketAbility='価値2の場所に価値が下がるチップをおく・チップは次のラウンドに取り除く' additionalAbility='マーケット内の街カードを1枚指定する。その街カードは次のラウンドまであなたしか買うことが出来ない。' />
-        <ManaFront mana={4} abilityType='その他' marketAbility='価値2の場所に価値が下がるチップをおく・チップは次のラウンドに取り除く' additionalAbility='マーケット内の街カードを1枚指定する。その街カードは次のラウンドまであなたしか買うことが出来ない。' />
-      </PrintableList>
       <Global styles={globalStyle} />
       {billsBlocks.map((billBlock) => (
         <>
@@ -165,9 +179,19 @@ const Home: NextPage = () => {
           ) : null}
         </>
       ))}
+      {manasBlocks.map((manaBlock) => (
+        <>
+          <PrintableList title="アクションカード">
+            { manaBlock.map((mana) => (
+              <ManaFront key={`front-${hash(mana)}`} {...mana} />
+            ))}
+          </PrintableList>
+        </>
+      ))}
       <Controller
         onParseMoneyCallback={onParseMoneyCallback}
         onParseProjectCallback={onParseProjectCallback}
+        onParseManaCallback={onParseManaCallback}
       />
     </>
   )

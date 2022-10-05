@@ -21,11 +21,19 @@ export type ProjectRow = {
   slot3_type: string;
   slot3_dif: string;
   slot3_costs: string;
-}
+};
+
+export type ManaRow = {
+  'マナ': string;
+  '効果の属性': string;
+  '変動': string;
+  '効果': string;
+};
 
 type Props = {
   onParseMoneyCallback: (data: BillRow[]) => void;
   onParseProjectCallback: (data: ProjectRow[]) => void;
+  onParseManaCallback: (data: ManaRow[]) => void;
 }
 
 const parseWithCallback = <T,>(file: File, callback: (data: T[]) => void) => {
@@ -39,7 +47,8 @@ const parseWithCallback = <T,>(file: File, callback: (data: T[]) => void) => {
 
 export const Controller: FC<Props> = ({
   onParseMoneyCallback,
-  onParseProjectCallback
+  onParseProjectCallback,
+  onParseManaCallback,
 }) => {
   const {sideType, setSideType, loadCardType, setLoadCardType} = usePrintMode();
 
@@ -95,6 +104,12 @@ export const Controller: FC<Props> = ({
     parseWithCallback<ProjectRow>(file, onParseProjectCallback);
   }, []);
 
+  const onChangeMana = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files === null) return;
+    const file = event.target.files[0];
+    parseWithCallback<ManaRow>(file, onParseManaCallback);
+  }, []);
+
   const onClick = useCallback(() => {
     window.print();
   }, []);
@@ -105,6 +120,8 @@ export const Controller: FC<Props> = ({
         return onChangeMoney;
       case CARD_TYPE.PROJECT:
         return onChangeProject;
+      case CARD_TYPE.MANA:
+        return onChangeMana;
       default:
         return () => {} 
     }
