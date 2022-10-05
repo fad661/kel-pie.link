@@ -10,6 +10,7 @@ import { PrintableList } from '../components/PrintableList'
 import { css, Global } from '@emotion/react'
 import Controller, { BillRow, ProjectRow} from '../components/Controller/Controller'
 import { CARD_TYPE, SIDE_TYPE, usePrintMode } from '../contexts/PrintMode'
+import { ManaFront } from '../components/ECF/Mana/Front'
 
 
 const parseColor = (color: string) => {
@@ -67,6 +68,9 @@ const globalStyle = css`
     margin: 0;
     min-height: 100vh;
   }
+  img {
+    width: 100%;
+  }
   @page {
     margin: 10px;
   }
@@ -122,6 +126,12 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <PrintableList>
+        <ManaFront mana={4} abilityType='アタック' marketAbility='価値2の場所に価値が下がるチップをおく・チップは次のラウンドに取り除く' additionalAbility='マーケット内の街カードを1枚指定する。その街カードは次のラウンドまであなたしか買うことが出来ない。' />
+        <ManaFront mana={5} abilityType='購入' marketAbility='価値2の場所に価値が下がるチップをおく・チップは次のラウンドに取り除く' additionalAbility='マーケット内の街カードを1枚指定する。その街カードは次のラウンドまであなたしか買うことが出来ない。' />
+        <ManaFront mana={1} abilityType='勝利点' marketAbility='価値2の場所に価値が下がるチップをおく・チップは次のラウンドに取り除く' additionalAbility='マーケット内の街カードを1枚指定する。その街カードは次のラウンドまであなたしか買うことが出来ない。' />
+        <ManaFront mana={4} abilityType='その他' marketAbility='価値2の場所に価値が下がるチップをおく・チップは次のラウンドに取り除く' additionalAbility='マーケット内の街カードを1枚指定する。その街カードは次のラウンドまであなたしか買うことが出来ない。' />
+      </PrintableList>
       <Global styles={globalStyle} />
       {billsBlocks.map((billBlock) => (
         <>

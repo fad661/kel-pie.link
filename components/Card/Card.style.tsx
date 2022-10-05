@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 
 const resetCard = (background?: string) => css`
   box-sizing: border-box;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
