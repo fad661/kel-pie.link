@@ -8,7 +8,8 @@ import ProjectFront, { Cost, Slot } from '../components/ECF/Project/Front/Projec
 import ProjectBack from '../components/ECF/Project/Back/ProjectBack'
 import { PrintableList } from '../components/PrintableList'
 import { css, Global } from '@emotion/react'
-import Controller, { BillRow, ProjectRow } from '../components/Controller/Controller'
+import Controller, { BillRow, ProjectRow} from '../components/Controller/Controller'
+import { CARD_TYPE, SIDE_TYPE, usePrintMode } from '../contexts/PrintMode'
 
 
 const parseColor = (color: string) => {
@@ -64,6 +65,7 @@ const countColor = (costs: string, target: string): number => {
 const globalStyle = css`
   body {
     margin: 0;
+    min-height: 100vh;
   }
   @page {
     margin: 10px;
@@ -83,6 +85,7 @@ type Bill = ComponentProps<typeof MoneyFront> & ComponentProps<typeof MoneyBack>
 type Project = ComponentProps<typeof ProjectFront> & ComponentProps<typeof ProjectBack>;
 
 const Home: NextPage = () => {
+  const { sideType, loadCardType} = usePrintMode();
 
   const [bills, setBills] = useState<Bill[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -127,11 +130,13 @@ const Home: NextPage = () => {
               <MoneyFront key={`front-${hash(card)}`} color={card.color} amount={card.amount} />
             ))}
           </PrintableList>
-          <PrintableList title="紙幣: 裏" reverse>
-            { billBlock.map((card) => (
-              <MoneyBack key={`back-${hash(card)}`} color={card.color} />
-            ))}
-          </PrintableList>
+          {sideType === SIDE_TYPE.BOTH ? (
+            <PrintableList title="紙幣: 裏" reverse>
+              { billBlock.map((card) => (
+                <MoneyBack key={`back-${hash(card)}`} color={card.color} />
+              ))}
+            </PrintableList>
+          ) : null}
         </>
       ))}
       {projectsBlocks.map((projectBlock) => (
@@ -141,14 +146,19 @@ const Home: NextPage = () => {
               <ProjectFront key={`front-${hash(project)}`} leaderPoint={project.leaderPoint} slots={project.slots} />
             ))}
           </PrintableList>
-          <PrintableList title="プロジェクト: 裏" reverse>
-            { projectBlock.map((project) => (
-              <ProjectBack key={`back-${hash(project)}`} turn={project.turn} />
-            ))}
-          </PrintableList>
+          {sideType === SIDE_TYPE.BOTH ? (
+            <PrintableList title="プロジェクト: 裏" reverse>
+              { projectBlock.map((project) => (
+                <ProjectBack key={`back-${hash(project)}`} turn={project.turn} />
+              ))}
+            </PrintableList>
+          ) : null}
         </>
       ))}
-      <Controller onParseMoneyCallback={onParseMoneyCallback} onParseProjectCallback={onParseProjectCallback} />
+      <Controller
+        onParseMoneyCallback={onParseMoneyCallback}
+        onParseProjectCallback={onParseProjectCallback}
+      />
     </>
   )
 }
