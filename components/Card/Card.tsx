@@ -2,7 +2,8 @@ import React, { FC, ReactNode, useMemo } from 'react';
 import { styles } from './Card.style';
 
 const SIZES = {
-  HALF: 'half'
+  HALF_PORKER: 'halfPorker',
+  PORKER: 'porker'
 } as const;
 
 type Props = {
@@ -12,17 +13,17 @@ type Props = {
   children?: ReactNode
 }
 export const Card: FC<Props> = ({
-  size = SIZES.HALF,
+  size = SIZES.PORKER,
   background,
   children
 }) => {
 
   const style = useMemo(() => {
     switch(size) {
-      case SIZES.HALF:
-        return styles.half(background);
+      case SIZES.HALF_PORKER:
+        return styles.halfPorker(background);
       default:
-        return null;
+        return styles.porker(background);
     }
   }, [size, background]);
   
