@@ -1,5 +1,5 @@
 import type { GetStaticPropsContext, NextPage } from 'next'
-import { ComponentProps, useCallback, useState } from 'react'
+import { ComponentProps, useCallback, useMemo, useState } from 'react'
 import hash from 'object-hash'
 import { COLORS } from '../components/ECF/index.style'
 import { MoneyBack } from '../components/ECF/Money/Back'
@@ -70,6 +70,15 @@ const globalStyle = css`
   }
 `;
 
+const sliceByNumber = (arr: any[], num: number) => {
+  const length = Math.ceil(arr.length / num)
+  return new Array(length).fill(0).map((_, i) =>
+  arr.slice(i * num, (i + 1) * num)
+  )
+}
+
+const maxPageNum = 36;
+
 type Bill = ComponentProps<typeof MoneyFront> & ComponentProps<typeof MoneyBack>;
 type Project = ComponentProps<typeof ProjectFront> & ComponentProps<typeof ProjectBack>;
 
@@ -100,29 +109,45 @@ const Home: NextPage = () => {
     setProjects(projects);
   }, []);
 
+  const billsBlocks = useMemo(() => {
+    return sliceByNumber(bills, maxPageNum);
+  }, [bills]);
+
+  const projectsBlocks = useMemo(() => {
+    return sliceByNumber(projects, maxPageNum);
+  }, [projects]);
+
   return (
     <>
       <Global styles={globalStyle} />
-      <PrintableList title="紙幣: 表">
-        { bills.map((card) => (
-          <MoneyFront key={`front-${hash(card)}`} color={card.color} amount={card.amount} />
-        ))}
-      </PrintableList>
-      <PrintableList title="紙幣: 裏" reverse>
-        { bills.map((card) => (
-          <MoneyBack key={`back-${hash(card)}`} color={card.color} />
-        ))}
-      </PrintableList>
-      <PrintableList title="プロジェクト: 表">
-        { projects.map((project) => (
-          <ProjectFront key={`front-${hash(project)}`} leaderPoint={project.leaderPoint} slots={project.slots} />
-        ))}
-      </PrintableList>
-      <PrintableList title="プロジェクト: 裏" reverse>
-        { projects.map((project) => (
-          <ProjectBack key={`back-${hash(project)}`} turn={project.turn} />
-        ))}
-      </PrintableList>
+      {billsBlocks.map((billBlock) => (
+        <>
+          <PrintableList title="紙幣: 表">
+            { billBlock.map((card) => (
+              <MoneyFront key={`front-${hash(card)}`} color={card.color} amount={card.amount} />
+            ))}
+          </PrintableList>
+          <PrintableList title="紙幣: 裏" reverse>
+            { billBlock.map((card) => (
+              <MoneyBack key={`back-${hash(card)}`} color={card.color} />
+            ))}
+          </PrintableList>
+        </>
+      ))}
+      {projectsBlocks.map((projectBlock) => (
+        <>
+          <PrintableList title="プロジェクト: 表">
+            { projectBlock.map((project) => (
+              <ProjectFront key={`front-${hash(project)}`} leaderPoint={project.leaderPoint} slots={project.slots} />
+            ))}
+          </PrintableList>
+          <PrintableList title="プロジェクト: 裏" reverse>
+            { projectBlock.map((project) => (
+              <ProjectBack key={`back-${hash(project)}`} turn={project.turn} />
+            ))}
+          </PrintableList>
+        </>
+      ))}
       <Controller onParseMoneyCallback={onParseMoneyCallback} onParseProjectCallback={onParseProjectCallback} />
     </>
   )

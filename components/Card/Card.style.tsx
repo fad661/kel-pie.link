@@ -9,6 +9,10 @@ const resetCard = css`
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
+
+  @media print {
+    break-inside: avoid;
+  }
 `;
 
 export const styles = {

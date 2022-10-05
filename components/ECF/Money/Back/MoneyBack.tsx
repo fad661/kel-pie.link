@@ -10,7 +10,7 @@ export const MoneyBack: FC<Props> = ({
   color,
 }) => {
   return (
-    <Card background={color} />
+    <Card />
   );
 };
 
