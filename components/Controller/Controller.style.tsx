@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 
 export const styles = {
   footer: css`
+    z-index: 100;
     position: sticky;
     bottom: 0;
     width: 100%;

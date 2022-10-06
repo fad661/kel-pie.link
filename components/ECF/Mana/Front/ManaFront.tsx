@@ -64,8 +64,8 @@ export const ManaFront: FC<Props> = ({
         <img src={`/images/${charaImageName}`} />
       </picture>
       <div css={styles.textWrapper(color)}>
-        {marketAbility ? <p>{marketAbility}</p> : null}
-        {additionalAbility ? <p>{additionalAbility}</p> : null}
+        <p>{marketAbility}</p>
+        <p>{additionalAbility}</p>
       </div>
     </Card>
   );
