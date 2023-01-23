@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
+import { PrintMode, PRINT_MODE } from '../../contexts/PrintMode';
 
-const resetCard = (background?: string) => css`
+const resetCard = (printMode: PrintMode, background?: string) => css`
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -14,18 +15,19 @@ const resetCard = (background?: string) => css`
   background: ${background};
 
   @media print {
+    margin: ${printMode === PRINT_MODE.PRINT ? '5px' : 0};
     break-inside: avoid;
   }
 `;
 
 export const styles = {
-  halfPorker: (background?: string) => css`
-    ${resetCard(background)}
+  halfPorker: (printMode: PrintMode, background?: string) => css`
+    ${resetCard(printMode, background)}
     width: 63mm;
     height: 44mm;
   `,
-  porker: (background?: string) => css`
-    ${resetCard(background)}
+  porker: (printMode: PrintMode, background?: string) => css`
+    ${resetCard(printMode, background)}
     height: 88mm;
     width: 63mm;
   `,

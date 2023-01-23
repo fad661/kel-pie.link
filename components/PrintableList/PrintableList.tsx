@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useMemo } from 'react';
+import { usePrintMode } from '../../contexts/PrintMode';
 import { styles } from './PrintableList.style';
 
 const SIZES = {

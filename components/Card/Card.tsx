@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useMemo } from 'react';
+import { usePrintMode } from '../../contexts/PrintMode';
 import { styles } from './Card.style';
 
 const SIZES = {
@@ -17,15 +18,16 @@ export const Card: FC<Props> = ({
   background,
   children
 }) => {
+  const { printMode } = usePrintMode();
 
   const style = useMemo(() => {
     switch(size) {
       case SIZES.HALF_PORKER:
-        return styles.halfPorker(background);
+        return styles.halfPorker(printMode, background);
       default:
-        return styles.porker(background);
+        return styles.porker(printMode, background);
     }
-  }, [size, background]);
+  }, [printMode, size, background]);
   
   return (
     <li css={style}>

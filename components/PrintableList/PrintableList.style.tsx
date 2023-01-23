@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { PrintMode, PRINT_MODE } from '../../contexts/PrintMode';
 
 const resetList = (reverse = false) =>  css`
   display: flex;
@@ -12,7 +13,7 @@ const resetList = (reverse = false) =>  css`
   list-style: none;
 
   @media print {
-    gap: 0;
+    gap:0;
     flex-direction: ${reverse ? 'row-reverse': 'row'};
   }
 `;
@@ -25,7 +26,6 @@ export const styles = {
     @media print {
       margin: 0;
       -webkit-print-color-adjust: exact;
-      size: A4 landscape;
       page-break-before: always;
     }
   `,

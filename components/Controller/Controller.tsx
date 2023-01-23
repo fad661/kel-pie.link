@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC, ReactEventHandler, SyntheticEvent, useCallback, useEffect, useMemo } from 'react';
 import { parse, ParseResult } from 'papaparse';
 import { styles } from './Controller.style';
-import { CardType, CARD_TYPE, SideType, SIDE_TYPE, usePrintMode } from '../../contexts/PrintMode';
+import { CardType, CARD_TYPE, PrintMode, PRINT_MODE, SideType, SIDE_TYPE, usePrintMode } from '../../contexts/PrintMode';
 
 export type BillRow= {
   color: string;
@@ -51,11 +51,7 @@ export const Controller: FC<Props> = ({
   onParseProjectCallback,
   onParseManaCallback,
 }) => {
-  const {sideType, setSideType, loadCardType, setLoadCardType} = usePrintMode();
-
-  useEffect(() => {
-    setLoadCardType(CARD_TYPE.PROJECT);
-  }, [])
+  const {sideType, setSideType, printMode, setPrintMode, loadCardType, setLoadCardType} = usePrintMode();
 
   const selectSideTypeProps = useMemo(() => {
     const options = Object.entries(SIDE_TYPE).map(([key, value]) => {
@@ -65,8 +61,8 @@ export const Controller: FC<Props> = ({
       };
     });
     const onSelect = (e: SyntheticEvent<HTMLSelectElement>) => {
-      const sidType = parseInt(e.currentTarget.value) as SideType;
-      setSideType(sidType);
+      const sideType = parseInt(e.currentTarget.value) as SideType;
+      setSideType(sideType);
     };
     return {
       options,
@@ -74,6 +70,24 @@ export const Controller: FC<Props> = ({
       selectedValue: sideType
     }
   }, [sideType, setSideType]);
+
+  const selectPrintModeProps = useMemo(() => {
+    const options = Object.entries(PRINT_MODE).map(([key, value]) => {
+      return {
+        value,
+        label: key
+      }
+    });
+    const onSelect = (e: SyntheticEvent<HTMLSelectElement>) => {
+      const printMode = parseInt(e.currentTarget.value) as PrintMode;
+      setPrintMode(printMode);
+    };
+    return {
+      options,
+      onSelect,
+      selectedValue: printMode,
+    }
+  }, [printMode, setPrintMode])
 
   const selectCardTypeProps = useMemo(() => {
     const options = Object.entries(CARD_TYPE).map(([key, value]) => {
@@ -131,11 +145,17 @@ export const Controller: FC<Props> = ({
   return (
     <footer css={styles.footer}>
       <div>
-        <div><strong>Print mode</strong></div>
+        <div><strong>Side Type</strong></div>
         <Select {...selectSideTypeProps} />
       </div>
       <div>
-        <div><strong>Card type</strong></div>
+        <div><strong>Print Mode</strong></div>
+        <div>
+          <Select {...selectPrintModeProps} />
+        </div>
+      </div>
+      <div>
+        <div><strong>Card Type</strong></div>
         <div>
           <Select {...selectCardTypeProps} />
           <input type="file" name="money" onChange={onSelectFile} />
