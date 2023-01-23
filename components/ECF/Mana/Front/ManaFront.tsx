@@ -63,14 +63,14 @@ export const ManaFront: FC<Props> = ({
         <ul css={styles.ul}>
           {[...Array(mana)].map(() => (
             <li key={`${objectHash(mana)}-${mana}`} css={styles.li}>
-              <img src="/images/mana.svg" />
+              <img src="./images/mana.svg" />
             </li>
           ))}
         </ul>
       ) : null}
       <div css={styles.background(color)} />
       <picture css={styles.picture}>
-        <img src={`/images/${charaImageName}`} />
+        <img src={`./images/${charaImageName}`} />
       </picture>
       <div css={styles.textWrapper(color)}>
         <p>{marketAbility}</p>
