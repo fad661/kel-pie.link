@@ -28,6 +28,7 @@ export type ManaRow = {
   '効果の属性': string;
   '変動': string;
   '効果': string;
+  '枚数': string;
 };
 
 type Props = {

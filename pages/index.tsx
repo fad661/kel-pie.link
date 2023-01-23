@@ -121,14 +121,18 @@ const Home: NextPage = () => {
   }, []);
 
   const onParseManaCallback = useCallback((data: ManaRow[]) => {
-    const manas = data.map<Mana>((manaRow: ManaRow) => {
-      return {
-        mana: parseInt(manaRow['マナ']),
-        abilityType: manaRow['効果の属性'] as AbilityType,
-        marketAbility: manaRow['変動'],
-        additionalAbility: manaRow['効果']
-      };
-    });
+    const manas = data.reduce<Mana[]>((acc: Mana[], manaRow: ManaRow) => {
+      const addManas = [...Array(parseInt(manaRow['枚数']))].map(() => {
+        return {
+          mana: parseInt(manaRow['マナ']),
+          abilityType: manaRow['効果の属性'] as AbilityType,
+          marketAbility: manaRow['変動'],
+          additionalAbility: manaRow['効果'],
+          count: parseInt(manaRow['枚数']),
+        };
+      });
+      return acc.concat(addManas);
+    }, []);
     setManas(manas);
   }, []);
 

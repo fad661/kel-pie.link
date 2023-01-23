@@ -6,10 +6,13 @@ const ABILITY_TYPE = {
   ATTACK: 'アタック',
   BICTORY: '勝利点',
   BUY: '購入',
-  CARD: 'カード系',
+  ACTION: 'アクション',
+  CARD: 'ドロー',
   DEMERIT: 'デメリット',
   REACTION: 'リアクション',
-  OTHER: 'その他'
+  CONTROLE: '市場操作',
+  JOKER: 'ジョーカー',
+  OTHER: '特殊'
 } as const;
 
 type AbilityType = typeof ABILITY_TYPE[keyof typeof ABILITY_TYPE];
@@ -26,20 +29,25 @@ export const ManaFront: FC<Props> = ({
   mana,
   abilityType,
   marketAbility = '',
-  additionalAbility = ''
+  additionalAbility = '',
 }) => {
+  console.log(mana);
 
   const [color, charaImageName] = useMemo(() => {
     switch(abilityType) {
       case ABILITY_TYPE.ATTACK:
+      case ABILITY_TYPE.JOKER:
         return ['#F16056', 'anubis.png'];
       case ABILITY_TYPE.BICTORY:
+      case ABILITY_TYPE.ACTION:
         return ['#00A583', 'bastet.png'];
       case ABILITY_TYPE.BUY:
         return ['#F2D324', 'horus.png'];
       case ABILITY_TYPE.REACTION:
-        return ['#4D73BB', 'wenet.png'];
       case ABILITY_TYPE.CARD:
+        return ['#4D73BB', 'wenet.png'];
+      case ABILITY_TYPE.CONTROLE:
+        return ['#f1b356', 'set.png'];
       case ABILITY_TYPE.DEMERIT:
       case ABILITY_TYPE.OTHER:
       default:
