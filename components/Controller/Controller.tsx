@@ -2,6 +2,7 @@ import React, { ChangeEvent, FC, ReactEventHandler, SyntheticEvent, useCallback,
 import { parse, ParseResult } from 'papaparse';
 import { styles } from './Controller.style';
 import { CardType, CARD_TYPE, PrintMode, PRINT_MODE, SideType, SIDE_TYPE, usePrintMode } from '../../contexts/PrintMode';
+import objectHash from 'object-hash';
 
 export type BillRow= {
   color: string;
@@ -111,19 +112,19 @@ export const Controller: FC<Props> = ({
     if (event.target.files === null) return;
     const file = event.target.files[0];
     parseWithCallback<BillRow>(file, onParseMoneyCallback);
-  }, []);
+  }, [onParseMoneyCallback]);
 
   const onChangeProject = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
     const file = event.target.files[0];
     parseWithCallback<ProjectRow>(file, onParseProjectCallback);
-  }, []);
+  }, [onParseProjectCallback]);
 
   const onChangeMana = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
     const file = event.target.files[0];
     parseWithCallback<ManaRow>(file, onParseManaCallback);
-  }, []);
+  }, [onParseManaCallback]);
 
   const onClick = useCallback(() => {
     window.print();
@@ -140,7 +141,7 @@ export const Controller: FC<Props> = ({
       default:
         return () => {} 
     }
-  }, [loadCardType, onChangeMoney, onChangeProject]);
+  }, [loadCardType, onChangeMoney, onChangeProject, onChangeMana]);
   
   return (
     <footer css={styles.footer}>
@@ -187,7 +188,7 @@ const Select: React.FC<SelectProps> = ({
   return (
     <select css={styles.select} onChange={onSelect}>
       {options.map((option) => (
-        <option value={option.value} selected={option.value === selectedValue}>{option.label}</option>
+        <option key={objectHash(option)} value={option.value} selected={option.value === selectedValue}>{option.label}</option>
       ))}
     </select>
   )

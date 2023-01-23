@@ -1,3 +1,4 @@
+import objectHash from 'object-hash';
 import React, { FC, useMemo } from 'react';
 import Card from '../../../Card/Card';
 import { styles } from './ManaFront.style';
@@ -61,7 +62,7 @@ export const ManaFront: FC<Props> = ({
       {mana ? (
         <ul css={styles.ul}>
           {[...Array(mana)].map(() => (
-            <li css={styles.li}>
+            <li key={`${objectHash(mana)}-${mana}`} css={styles.li}>
               <img src="/images/mana.svg" />
             </li>
           ))}
