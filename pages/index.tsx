@@ -8,10 +8,14 @@ import ProjectFront, { Cost, Slot } from '../components/ECF/Project/Front/Projec
 import ProjectBack from '../components/ECF/Project/Back/ProjectBack'
 import { PrintableList } from '../components/PrintableList'
 import { css, Global } from '@emotion/react'
-import Controller, { BillRow, ProjectRow, ManaRow} from '../components/Controller/Controller'
+import Controller, { BillRow, ProjectRow, ManaRow, DevilRow} from '../components/Controller/Controller'
 import { SIDE_TYPE, usePrintMode } from '../contexts/PrintMode'
 import { ManaFront } from '../components/ECF/Mana/Front'
+import { Attribute, DevilFront } from '../components/KUMACOLLE/Devil/DevilFront';
+import { Sign, DevilBack } from '../components/KUMACOLLE/Devil/DevilBack';
 
+const global = css`
+`;
 
 const parseColor = (color: string) => {
   switch(color) {
@@ -89,6 +93,7 @@ const maxPageNum = 9; // A4 x Porker
 type Bill = ComponentProps<typeof MoneyFront> & ComponentProps<typeof MoneyBack>;
 type Project = ComponentProps<typeof ProjectFront> & ComponentProps<typeof ProjectBack>;
 type Mana = ComponentProps<typeof ManaFront>;
+type Devil = ComponentProps<typeof DevilFront> & ComponentProps<typeof DevilBack>;
 type AbilityType = Mana['abilityType'];
 
 const Home: NextPage = () => {
@@ -97,6 +102,7 @@ const Home: NextPage = () => {
   const [bills, setBills] = useState<Bill[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [manas, setManas] = useState<Mana[]>([]);
+  const [devils, setDevils] = useState<Devil[]>([]);
 
   const onParseMoneyCallback = useCallback((data: BillRow[]) => {
     const bills = data.map<Bill>((bill) => {
@@ -136,6 +142,26 @@ const Home: NextPage = () => {
     setManas(manas);
   }, []);
 
+  const onParseDevilCallback = useCallback((data: DevilRow[]) => {
+    const devils = data.reduce<Devil[]>((acc: Devil[], devilRow: DevilRow) => {
+      const addDevils = [...Array(parseInt(devilRow['quantity']))].map(() => {
+        return {
+          cost: parseInt(devilRow['cost']),
+          sign: devilRow['sign'] as Sign,
+          attribute: devilRow['attribute'] as Attribute,
+          name: devilRow['name'],
+          effects: [
+            devilRow['plus'],
+            devilRow['minus'],
+          ],
+          imagePath: devilRow['illust'],
+        };
+      });
+      return acc.concat(addDevils);
+    }, []);
+    setDevils(devils);
+  }, []);
+
   const billsBlocks = useMemo(() => {
     return sliceByNumber(bills, maxPageNum);
   }, [bills]);
@@ -147,6 +173,10 @@ const Home: NextPage = () => {
   const manasBlocks = useMemo(() => {
     return sliceByNumber(manas, maxPageNum);
   }, [manas]);
+
+  const devilsBlocks = useMemo(() => {
+    return sliceByNumber(devils, maxPageNum);
+  }, [devils]);
 
   return (
     <>
@@ -192,10 +222,27 @@ const Home: NextPage = () => {
           </PrintableList>
         </>
       ))}
+      {devilsBlocks.map((devilBlock) => (
+        <>
+          <PrintableList title="悪魔: 表">
+            { devilBlock.map((card) => (
+              <DevilFront key={`front-${hash(card)}`} name={card.name} attribute={card.attribute} cost={card.cost} effects={card.effects} imagePath={card.imagePath} />
+            ))}
+          </PrintableList>
+          {sideType === SIDE_TYPE.BOTH ? (
+            <PrintableList title="悪魔: 裏" reverse>
+              { devilBlock.map((card) => (
+                <DevilBack key={`back-${hash(card)}`} sign={card.sign} />
+              ))}
+            </PrintableList>
+          ) : null}
+        </>
+      ))}
       <Controller
         onParseMoneyCallback={onParseMoneyCallback}
         onParseProjectCallback={onParseProjectCallback}
         onParseManaCallback={onParseManaCallback}
+        onParseDevilCallback={onParseDevilCallback}
       />
     </>
   )

@@ -32,10 +32,22 @@ export type ManaRow = {
   '枚数': string;
 };
 
+export type DevilRow = {
+  'cost': string;
+  'sign': string;
+  'attribute': string;
+  'name': string;
+  'plus': string;
+  'minus': string;
+  'illust': string;
+  'quantity': string;
+};
+
 type Props = {
   onParseMoneyCallback: (data: BillRow[]) => void;
   onParseProjectCallback: (data: ProjectRow[]) => void;
   onParseManaCallback: (data: ManaRow[]) => void;
+  onParseDevilCallback: (data: DevilRow[]) => void;
 }
 
 const parseWithCallback = <T,>(file: File, callback: (data: T[]) => void) => {
@@ -51,6 +63,7 @@ export const Controller: FC<Props> = ({
   onParseMoneyCallback,
   onParseProjectCallback,
   onParseManaCallback,
+  onParseDevilCallback,
 }) => {
   const {sideType, setSideType, printMode, setPrintMode, loadCardType, setLoadCardType} = usePrintMode();
 
@@ -126,6 +139,12 @@ export const Controller: FC<Props> = ({
     parseWithCallback<ManaRow>(file, onParseManaCallback);
   }, [onParseManaCallback]);
 
+  const onChangeDevil = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files === null) return;
+    const file = event.target.files[0];
+    parseWithCallback<DevilRow>(file, onParseDevilCallback);
+  }, [onParseDevilCallback]);
+
   const onClick = useCallback(() => {
     window.print();
   }, []);
@@ -138,6 +157,8 @@ export const Controller: FC<Props> = ({
         return onChangeProject;
       case CARD_TYPE.MANA:
         return onChangeMana;
+      case CARD_TYPE.DEVIL:
+        return onChangeDevil;
       default:
         return () => {} 
     }

@@ -10,6 +10,7 @@ export type SideType = typeof SIDE_TYPE[keyof typeof SIDE_TYPE];
 export const PRINT_MODE = {
   PRINT: 1,
   PDF: 2,
+  TTS: 3,
 } as const;
 
 export type PrintMode = typeof PRINT_MODE[keyof typeof PRINT_MODE];
@@ -19,6 +20,7 @@ export const CARD_TYPE = {
   MONEY: 'money',
   PROJECT: 'project',
   MANA: 'mana',
+  DEVIL: 'devil'
 } as const;
 
 export type CardType = typeof CARD_TYPE[keyof typeof CARD_TYPE];

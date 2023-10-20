@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { PrintMode, PRINT_MODE } from '../../contexts/PrintMode';
 
 const resetList = (reverse = false) =>  css`
   display: flex;
