@@ -13,21 +13,20 @@ type Props = {
   as?: 'back' | 'front';
   children?: ReactNode
 }
+
 export const Card: FC<Props> = ({
   size = SIZES.PORKER,
   background,
   children
 }) => {
-  const { printMode } = usePrintMode();
-
   const style = useMemo(() => {
     switch(size) {
       case SIZES.HALF_PORKER:
-        return styles.halfPorker(printMode, background);
+        return styles.halfPorker(background);
       default:
-        return styles.porker(printMode, background);
+        return styles.porker(background);
     }
-  }, [printMode, size, background]);
+  }, [size, background]);
   
   return (
     <li css={style}>

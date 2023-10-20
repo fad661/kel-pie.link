@@ -1,9 +1,10 @@
 import React, { FC, ReactNode, useMemo } from 'react';
-import { usePrintMode } from '../../contexts/PrintMode';
+import { PRINT_MODE, PrintMode, usePrintMode } from '../../contexts/PrintMode';
 import { styles } from './PrintableList.style';
 
 const SIZES = {
   A4: 'A4',
+  ADJUST: 'adjust',
 } as const;
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
   title?: string;
   children?: ReactNode;
   reverse?: boolean;
+  printMode?: PrintMode;
 }
 
 export const PrintableList: FC<Props> = ({
@@ -18,11 +20,14 @@ export const PrintableList: FC<Props> = ({
   title,
   children,
   reverse = false,
+  printMode = PRINT_MODE.PRINT
 }) => {
   const wrapperStyle = useMemo(() => {
     switch (size) {
       case SIZES.A4:
         return styles.a4;
+      case SIZES.ADJUST:
+        return styles.adjust;
       default:
         null;
     }
@@ -30,7 +35,7 @@ export const PrintableList: FC<Props> = ({
   return (
     <section css={wrapperStyle}>
       <h2 css={styles.title}>{title}</h2>
-      <ul css={styles.ul(reverse)}>
+      <ul css={styles.ul(printMode, reverse)}>
         {children}
       </ul>
     </section>
