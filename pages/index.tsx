@@ -14,9 +14,6 @@ import { ManaFront } from '../components/ECF/Mana/Front'
 import { Attribute, DevilFront } from '../components/KUMACOLLE/Devil/DevilFront';
 import { Sign, DevilBack } from '../components/KUMACOLLE/Devil/DevilBack';
 
-const global = css`
-`;
-
 const parseColor = (color: string) => {
   switch(color) {
     case 'red':
@@ -181,63 +178,66 @@ const Home: NextPage = () => {
   return (
     <>
       <Global styles={globalStyle} />
-      {billsBlocks.map((billBlock) => (
-        <>
-          <PrintableList title="紙幣: 表">
-            { billBlock.map((card) => (
-              <MoneyFront key={`front-${hash(card)}`} color={card.color} amount={card.amount} />
-            ))}
-          </PrintableList>
-          {sideType === SIDE_TYPE.BOTH ? (
-            <PrintableList title="紙幣: 裏" reverse>
+      <img id="esm" />
+      <div id="est">
+        {billsBlocks.map((billBlock) => (
+          <>
+            <PrintableList title="紙幣: 表">
               { billBlock.map((card) => (
-                <MoneyBack key={`back-${hash(card)}`} color={card.color} />
+                <MoneyFront key={`front-${hash(card)}`} color={card.color} amount={card.amount} />
               ))}
             </PrintableList>
-          ) : null}
-        </>
-      ))}
-      {projectsBlocks.map((projectBlock) => (
-        <>
-          <PrintableList title="プロジェクト: 表">
-            { projectBlock.map((project) => (
-              <ProjectFront key={`front-${hash(project)}`} leaderPoint={project.leaderPoint} slots={project.slots} />
-            ))}
-          </PrintableList>
-          {sideType === SIDE_TYPE.BOTH ? (
-            <PrintableList title="プロジェクト: 裏" reverse>
+            {sideType === SIDE_TYPE.BOTH ? (
+              <PrintableList title="紙幣: 裏" reverse>
+                { billBlock.map((card) => (
+                  <MoneyBack key={`back-${hash(card)}`} color={card.color} />
+                ))}
+              </PrintableList>
+            ) : null}
+          </>
+        ))}
+        {projectsBlocks.map((projectBlock) => (
+          <>
+            <PrintableList title="プロジェクト: 表">
               { projectBlock.map((project) => (
-                <ProjectBack key={`back-${hash(project)}`} turn={project.turn} />
+                <ProjectFront key={`front-${hash(project)}`} leaderPoint={project.leaderPoint} slots={project.slots} />
               ))}
             </PrintableList>
-          ) : null}
-        </>
-      ))}
-      {manasBlocks.map((manaBlock) => (
-        <>
-          <PrintableList title="アクションカード">
-            { manaBlock.map((mana) => (
-              <ManaFront key={`front-${hash(mana)}`} {...mana} />
-            ))}
-          </PrintableList>
-        </>
-      ))}
-      {devilsBlocks.map((devilBlock) => (
-        <>
-          <PrintableList title="悪魔: 表">
-            { devilBlock.map((card) => (
-              <DevilFront key={`front-${hash(card)}`} name={card.name} attribute={card.attribute} cost={card.cost} effects={card.effects} imagePath={card.imagePath} />
-            ))}
-          </PrintableList>
-          {sideType === SIDE_TYPE.BOTH ? (
-            <PrintableList title="悪魔: 裏" reverse>
+            {sideType === SIDE_TYPE.BOTH ? (
+              <PrintableList title="プロジェクト: 裏" reverse>
+                { projectBlock.map((project) => (
+                  <ProjectBack key={`back-${hash(project)}`} turn={project.turn} />
+                ))}
+              </PrintableList>
+            ) : null}
+          </>
+        ))}
+        {manasBlocks.map((manaBlock) => (
+          <>
+            <PrintableList title="アクションカード">
+              { manaBlock.map((mana) => (
+                <ManaFront key={`front-${hash(mana)}`} {...mana} />
+              ))}
+            </PrintableList>
+          </>
+        ))}
+        {devilsBlocks.map((devilBlock) => (
+          <>
+            <PrintableList title="悪魔: 表">
               { devilBlock.map((card) => (
-                <DevilBack key={`back-${hash(card)}`} sign={card.sign} />
+                <DevilFront key={`front-${hash(card)}`} name={card.name} attribute={card.attribute} cost={card.cost} effects={card.effects} imagePath={card.imagePath} />
               ))}
             </PrintableList>
-          ) : null}
-        </>
-      ))}
+            {sideType === SIDE_TYPE.BOTH ? (
+              <PrintableList title="悪魔: 裏" reverse>
+                { devilBlock.map((card) => (
+                  <DevilBack key={`back-${hash(card)}`} sign={card.sign} />
+                ))}
+              </PrintableList>
+            ) : null}
+          </>
+        ))}
+      </div>
       <Controller
         onParseMoneyCallback={onParseMoneyCallback}
         onParseProjectCallback={onParseProjectCallback}

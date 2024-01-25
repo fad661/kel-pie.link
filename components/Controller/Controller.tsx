@@ -65,7 +65,7 @@ export const Controller: FC<Props> = ({
   onParseManaCallback,
   onParseDevilCallback,
 }) => {
-  const {sideType, setSideType, printMode, setPrintMode, loadCardType, setLoadCardType} = usePrintMode();
+  const {sideType, setSideType, printMode, setPrintMode, loadCardType, setLoadCardType, convertToJpeg} = usePrintMode();
 
   const selectSideTypeProps = useMemo(() => {
     const options = Object.entries(SIDE_TYPE).map(([key, value]) => {
@@ -145,9 +145,15 @@ export const Controller: FC<Props> = ({
     parseWithCallback<DevilRow>(file, onParseDevilCallback);
   }, [onParseDevilCallback]);
 
-  const onClick = useCallback(() => {
+  const onClickPrint = useCallback(() => {
     window.print();
   }, []);
+
+  const onClickConvert = useCallback(() => {
+    const origin = document.getElementById('est');
+    const to = document.getElementById('esm') ?? undefined;
+    if(origin) convertToJpeg(origin, to);
+  }, [convertToJpeg]);
 
   const onSelectFile = useMemo(() => {
     switch(loadCardType) {
@@ -184,7 +190,8 @@ export const Controller: FC<Props> = ({
         </div>
       </div>
       <div>
-        <button css={styles.button} type="button" onClick={onClick}>Print</button>
+        <button css={styles.button} type="button" onClick={onClickPrint}>Print</button>
+        <button css={styles.button} type="button" onClick={onClickConvert}>Convert</button>
       </div>
     </footer>
   );

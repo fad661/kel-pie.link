@@ -1,4 +1,5 @@
-import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
+import React, { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useState } from 'react';
+import { toJpeg } from 'html-to-image';
 
 export const SIDE_TYPE = {
   ONE: 1,
@@ -32,6 +33,7 @@ type Context = {
   setPrintMode: Dispatch<SetStateAction<PrintMode>>;
   loadCardType: CardType;
   setLoadCardType: Dispatch<SetStateAction<CardType>>;
+  convertToJpeg: (origin: HTMLElement, to?: HTMLImageElement) => void;
 };
 
 const PrintModeContext = createContext<Context>(
@@ -42,6 +44,7 @@ const PrintModeContext = createContext<Context>(
     setPrintMode: () => {},
     loadCardType: CARD_TYPE.MANA,
     setLoadCardType: () => {},
+    convertToJpeg: () => {}
   }
 );
 
@@ -50,13 +53,25 @@ const useProvidePrintMode = (): Context => {
   const [printMode, setPrintMode] = useState<PrintMode>(PRINT_MODE.PDF);
   const [loadCardType, setLoadCardType] = useState<CardType>(CARD_TYPE.MANA);
 
+  const convertToJpeg = useCallback((origin: HTMLElement, to?: HTMLImageElement) => {
+    toJpeg(origin).then((dataUrl) => {
+      if(to) {
+        to.src = dataUrl;
+      }
+      window.open(dataUrl, '_blank');
+    }).catch((e) => {
+      console.log(e);
+    });
+  }, []);
+
   return {
     sideType,
     setSideType,
     printMode,
     setPrintMode,
     loadCardType,
-    setLoadCardType
+    setLoadCardType,
+    convertToJpeg,
   }
 };
 

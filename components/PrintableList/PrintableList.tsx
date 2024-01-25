@@ -26,8 +26,6 @@ export const PrintableList: FC<Props> = ({
     switch (size) {
       case SIZES.A4:
         return styles.a4;
-      case SIZES.ADJUST:
-        return styles.adjust;
       default:
         null;
     }
